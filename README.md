@@ -30,3 +30,43 @@ The `TranscriptConnector` provides the following operations:
 
 5. **Download Transcript File**  
     Downloads the transcript file of a specified online meeting in the available format.
+
+
+### Custom Code Implementation
+
+The custom code in the connector ensures that the web/vtt transcript returned by the Microsoft Graph API is transformed into a JSON object for easier consumption. Below is an overview of the implemented logic:
+
+1. **Transforming the Response**  
+    The `TransformResponse` method intercepts the HTTP response from the Graph API. If the response is successful, it reads the plain text content of the transcript and wraps it into a JSON object with a single key, `transcript`.
+
+2. **Code Snippet**  
+    The following code snippet demonstrates the transformation logic:
+
+    ```csharp
+    public class Script : ScriptBase
+    {
+         public override async Task<HttpResponseMessage> ExecuteAsync()
+         {
+              return await this.TransformResponse().ConfigureAwait(false);
+         }
+
+         private async Task<HttpResponseMessage> TransformResponse()
+         {
+              HttpResponseMessage response = await this.Context.SendAsync(this.Context.Request, this.CancellationToken).ConfigureAwait(false);
+
+              if (response.IsSuccessStatusCode)
+              {
+                    var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var newResult = new JObject
+                    {
+                         ["transcript"] = responseString,
+                    };
+                    response.Content = CreateJsonContent(newResult.ToString());
+              }
+
+              return response;
+         }
+    }
+    ```
+
+This ensures that the transcript data is returned in a structured JSON format, making it easier for downstream applications to process.
