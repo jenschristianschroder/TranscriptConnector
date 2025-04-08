@@ -12,7 +12,7 @@ A custom Power Platform connector to retrieve meeting transcripts from Microsoft
 | OnlineMeetingTranscript.Read.All  | Delegated  | Read all transcripts of online meetings  | Yes  |
 | User.Read  | Delegated  | Sign in and read user profile  | No  |
 
-### Operations
+## Operations
 
 The `TranscriptConnector` provides the following operations:
 
@@ -32,7 +32,7 @@ The `TranscriptConnector` provides the following operations:
     Downloads the transcript file of a specified online meeting in the available format.
 
 
-### Custom Code Implementation
+## Custom Code Implementation
 
 The custom code in the connector ensures that the web/vtt transcript returned by the Microsoft Graph API is transformed into a JSON object for easier consumption. Below is an overview of the implemented logic:
 
